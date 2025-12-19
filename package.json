@@ -4,7 +4,8 @@
   "description": "",
   "main": "node.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
@@ -12,5 +13,14 @@
   "type": "commonjs",
   "dependencies": {
     "express": "^5.2.1"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2pac-is-tan/dummy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/2pac-is-tan/dummy/issues"
+  },
+  "homepage": "https://github.com/2pac-is-tan/dummy#readme"
 }
