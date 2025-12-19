@@ -4,12 +4,12 @@ const mongoose = require("mongoose");
 
 const app = express();
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.log("MongoDB connection error:", err));
-
 
 const productSchema = new mongoose.Schema({
   id: Number,
@@ -19,12 +19,12 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model("Product", productSchema);
 
-
+// Show form by default
 app.get("/", (req, res) => {
-  res.send("Product API is running successfully");
+  res.sendFile(__dirname + "/public/form.html");
 });
 
-
+// GET all products
 app.get("/products", async (req, res) => {
   try {
     const data = await Product.find();
@@ -34,7 +34,7 @@ app.get("/products", async (req, res) => {
   }
 });
 
-
+// GET product by id
 app.get("/products/:id", async (req, res) => {
   try {
     const product = await Product.findOne({ id: req.params.id });
@@ -46,11 +46,11 @@ app.get("/products/:id", async (req, res) => {
   }
 });
 
-
+// POST product (form retrieves data)
 app.post("/products", async (req, res) => {
   try {
     const product = await Product.create(req.body);
-    res.json({ message: "Product added successfully", product });
+    res.send("Product Added Successfully");
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -84,9 +84,7 @@ app.delete("/products/:id", async (req, res) => {
   }
 });
 
-
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));
 
-// required for vercel
 module.exports = app;
