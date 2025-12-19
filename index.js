@@ -4,12 +4,10 @@ const mongoose = require("mongoose");
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log("MongoDB connection error:", err));
+  .catch(err => console.error("MongoDB connection error:", err));
 
 const productSchema = new mongoose.Schema({
   id: Number,
@@ -19,72 +17,75 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model("Product", productSchema);
 
-// Show form by default
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/form.html");
+  res.send("Product API is running successfully");
 });
 
-// GET all products
 app.get("/products", async (req, res) => {
   try {
-    const data = await Product.find();
-    res.json(data);
+    const products = await Product.find();
+    res.json(products);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// GET product by id
-app.get("/products/:id", async (req, res) => {
+app.get("/product/:id", async (req, res) => {
   try {
     const product = await Product.findOne({ id: req.params.id });
-    if (!product) return res.json({ message: "Product not found" });
-
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
     res.json(product);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// POST product (form retrieves data)
-app.post("/products", async (req, res) => {
+app.post("/product", async (req, res) => {
   try {
-    const product = await Product.create(req.body);
-    res.send("Product Added Successfully");
+    const product = await Product.create({
+      id: req.body.id,
+      name: req.body.name,
+      price: req.body.price
+    });
+    res.status(201).json(product);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
 
-// PUT update product
-app.put("/products/:id", async (req, res) => {
+app.put("/product/:id", async (req, res) => {
   try {
     const product = await Product.findOneAndUpdate(
       { id: req.params.id },
       req.body,
       { new: true }
     );
-    if (!product) return res.json({ message: "Product not found" });
-
-    res.json({ message: "Product updated", product });
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json(product);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 
-// DELETE product
-app.delete("/products/:id", async (req, res) => {
+app.delete("/product/:id", async (req, res) => {
   try {
     const product = await Product.findOneAndDelete({ id: req.params.id });
-    if (!product) return res.json({ message: "Product not found" });
-
-    res.json({ message: "Product deleted" });
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json({ message: "Product deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server running on ${PORT}`));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 module.exports = app;
