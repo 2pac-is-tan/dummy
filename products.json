@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "model": "HP ProBook 635 Aero G7 (Ryzen 5 4000 Series) 16GB / 512GB SSD / 13.3\" FHD / Fingerprint / Silver",
+    "price": "Rs 1,00,000"
+  },
+  {
+    "id": 2,
+    "model": "Dell Inspiron 5510 (Intel i5 11th Gen) 8GB / 512GB SSD / 15.6\" FHD / Silver",
+    "price": "Rs 85,000"
+  },
+  {
+    "id": 3,
+    "model": "Lenovo ThinkPad X1 Carbon Gen 9 (Intel i7 11th Gen) 16GB / 1TB SSD / 14\" FHD / Black",
+    "price": "Rs 1,20,000"
+  },
+  {
+    "id": 4,
+    "model": "Acer Aspire 5 (Intel i3 11th Gen) 8GB / 256GB SSD / 15.6\" FHD / Silver",
+    "price": "Rs 60,000"
+  },
+  {
+    "id": 5,
+    "model": "Asus ROG Zephyrus G14 (Ryzen 9 5900HS) 16GB / 1TB SSD / 14\" QHD / White",
+    "price": "Rs 1,50,000"
+  },
+  {
+    "id": 6,
+    "model": "HP Pavilion 14 (Intel i5 11th Gen) 8GB / 512GB SSD / 14\" FHD / Blue",
+    "price": "Rs 95,000"
+  },
+  {
+    "id": 7,
+    "model": "Dell XPS 13 (Intel i7 11th Gen) 16GB / 512GB SSD / 13.4\" FHD / Silver",
+    "price": "Rs 1,10,000"
+  },
+  {
+    "id": 8,
+    "model": "Lenovo IdeaPad 3 (Intel i3 11th Gen) 8GB / 256GB SSD / 15.6\" FHD / Grey",
+    "price": "Rs 50,000"
+  },
+  {
+    "id": 9,
+    "model": "Acer Swift 3 (Intel i5 11th Gen) 8GB / 512GB SSD / 14\" FHD / Silver",
+    "price": "Rs 75,000"
+  },
+  {
+    "id": 10,
+    "model": "Asus VivoBook 15 (Intel i7 11th Gen) 16GB / 512GB SSD / 15.6\" FHD / Grey",
+    "price": "Rs 1,05,000"
+  }
+]
