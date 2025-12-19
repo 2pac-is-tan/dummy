@@ -45,8 +45,9 @@ fs.readFile('products.json', (err, data) => {
     if (!err) {
         products = JSON.parse(data);
         console.log(products);
-        app.listen(8080, () => {
-            console.log("Server running on port 8080");
-        });
     }
+});
+
+app.listen(8080, () => {
+    console.log("Server running on port 8080");
 });
