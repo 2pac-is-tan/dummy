@@ -1,53 +1,92 @@
-const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const bodyParser = require('body-parser');
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
 
 const app = express();
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 
-app.use(express.static(path.join(__dirname, 'public')));
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.log("MongoDB connection error:", err));
 
-let products;
+
+const productSchema = new mongoose.Schema({
+  id: Number,
+  name: String,
+  price: Number
+});
+
+const Product = mongoose.model("Product", productSchema);
 
 
-app.get('/products', (req, res) => {
-    res.json(products);
+app.get("/", (req, res) => {
+  res.send("Product API is running successfully");
 });
 
 
-app.get('/products/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const product = products.find(p => p.id === id);
+app.get("/products", async (req, res) => {
+  try {
+    const data = await Product.find();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
-    if (!product) {
-        return res.json({ message: "Product not found" });
-    }
+
+app.get("/products/:id", async (req, res) => {
+  try {
+    const product = await Product.findOne({ id: req.params.id });
+    if (!product) return res.json({ message: "Product not found" });
 
     res.json(product);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 
+app.post("/products", async (req, res) => {
+  try {
+    const product = await Product.create(req.body);
+    res.json({ message: "Product added successfully", product });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
-app.post('/products', (req, res) => {
-    products.push(req.body);
+// PUT update product
+app.put("/products/:id", async (req, res) => {
+  try {
+    const product = await Product.findOneAndUpdate(
+      { id: req.params.id },
+      req.body,
+      { new: true }
+    );
+    if (!product) return res.json({ message: "Product not found" });
 
-    fs.writeFileSync('products.json', JSON.stringify(products, null, 2));
+    res.json({ message: "Product updated", product });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
-    res.send("Product added successfully");
+// DELETE product
+app.delete("/products/:id", async (req, res) => {
+  try {
+    const product = await Product.findOneAndDelete({ id: req.params.id });
+    if (!product) return res.json({ message: "Product not found" });
+
+    res.json({ message: "Product deleted" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 
-fs.readFile('products.json', (err, data) => {
-    if (!err) {
-        products = JSON.parse(data);
-        console.log(products);
-    }
-});
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log(`Server running on ${PORT}`));
 
-app.listen(8080, () => {
-    console.log("Server running on port 8080");
-});
+// required for vercel
+module.exports = app;
